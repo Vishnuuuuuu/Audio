@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="styleslogin.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit">Login</button>
+        </form>
+        <h2>Register</h2>
+        <form id="registerForm">
+            <label for="reg-username">Username:</label>
+            <input type="text" id="reg-username" name="username" required>
+            <label for="reg-password">Password:</label>
+            <input type="password" id="reg-password" name="password" required>
+            <button type="submit">Register</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            localStorage.setItem('username', username);
+            window.location.href = 'main.html';
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const username = document.getElementById('reg-username').value;
+            localStorage.setItem('username', username);
+            window.location.href = 'main.html';
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hearing Test</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOM6g2x51r+vSbi+X1p4bZid1Sk58FJ/FBk6sgL7" crossorigin="anonymous">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 900px;
+            text-align: center;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        #frequencyBox {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #007bff;
+            display: block;
+            margin: 20px 0;
+        }
+
+        button {
+            background: #007bff;
+            color: #fff;
+            border: none;
+            padding: 15px 25px;
+            margin: 10px 5px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            font-size: 1em;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        button:hover:not(:disabled) {
+            background: #0056b3;
+            transform: scale(1.05);
+        }
+
+        button i {
+            margin-right: 10px;
+        }
+
+        select {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            border: 1px solid #007bff;
+            cursor: pointer;
+            transition: border 0.3s;
+        }
+
+        select:hover {
+            border: 1px solid #0056b3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        td {
+            color: #333;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #e9f5ff;
+        }
+
+        #resultsDisplay div {
+            padding: 15px;
+            margin-top: 10px;
+            background: #e9ecef;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #ageBox {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #007bff;
+        }
+
+        #backButton {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 15px 25px;
+            margin-top: 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.3s, transform 0.2s;
+            font-size: 1em;
+        }
+
+        #backButton:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h3 id="usernameDisplay">Welcome</h3>
+        <div>
+            <label for="frequencyBox">Current Frequency:</label>
+            <span id="frequencyBox">20 Hz</span>
+        </div>
+        <button id="startButton"><i class="fas fa-play"></i> Start</button>
+        <button id="stopButton" disabled><i class="fas fa-stop"></i> Stop</button>
+        <button id="recordButton" disabled><i class="fas fa-save"></i> Record</button>
+        <button id="resumeButton" disabled><i class="fas fa-redo"></i> Resume</button>
+        <button id="restartButton" disabled><i class="fas fa-sync-alt"></i> Restart</button>
+        <button id="backButton"><i class="fas fa-arrow-left"></i> Back</button>
+            
+        <select id="numTests">
+            <option value="1">1 Test</option>
+            <option value="2">2 Tests</option>
+            <option value="3">3 Tests</option>
+            <option value="4">4 Tests</option>
+            <option value="5">5 Tests</option>
+        </select>
+
+        <h3>Recorded Frequencies:</h3>
+        <table id="recordedFrequenciesTable">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Frequencies</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="recordedFrequenciesBody"></tbody>
+        </table>
+
+        <div id="resultsDisplay"></div>
+        <div id="ageBox"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.0/jspdf.umd.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const frequencyBox = document.getElementById("frequencyBox");
+            const startButton = document.getElementById("startButton");
+            const stopButton = document.getElementById("stopButton");
+            const recordButton = document.getElementById("recordButton");
+            const resumeButton = document.getElementById("resumeButton");
+            const restartButton = document.getElementById("restartButton");
+            const recordedFrequenciesBody = document.getElementById("recordedFrequenciesBody");
+            const resultsDisplay = document.getElementById("resultsDisplay");
+            const ageBox = document.getElementById("ageBox");
+            const usernameDisplay = document.getElementById("usernameDisplay");
+            const numTests = document.getElementById("numTests");
+            const backButton = document.getElementById("backButton");
+
+            let currentFrequency = 20;
+            let audiometryInterval;
+            let audioContext;
+            let oscillator;
+            let currentUser = '';
+            let users = [];
+            let currentUserIndex = 0;
+            let isResuming = false;
+            let maxTests = 1;
+
+            let userRecords = JSON.parse(localStorage.getItem('userRecords')) || {};
+
+            backButton.addEventListener('click', () => {
+                currentUser = prompt('Enter your username:');
+                usernameDisplay.innerText = `Welcome, ${currentUser}`;
+                localStorage.setItem('username', currentUser);
+
+                if (!userRecords[currentUser]) {
+                    userRecords[currentUser] = { recordedFrequencies: [] };
+                }
+
+                updateUserRecordTable();
+            });
+
+            const username = localStorage.getItem('username');
+            if (username) {
+                currentUser = username;
+                if (!userRecords[username]) {
+                    userRecords[username] = { recordedFrequencies: [] };
+                }
+                usernameDisplay.innerText = `Welcome, ${username}`;
+            } else {
+                currentUser = prompt('Enter your username:');
+                usernameDisplay.innerText = `Welcome, ${currentUser}`;
+                localStorage.setItem('username', currentUser);
+            }
+
+            numTests.addEventListener('change', () => {
+                maxTests = parseInt(numTests.value);
+            });
+
+            startButton.addEventListener("click", startAudiometry);
+            stopButton.addEventListener("click", stopAudiometry);
+            recordButton.addEventListener("click", recordData);
+            resumeButton.addEventListener("click", resumeAudiometry);
+            restartButton.addEventListener("click", restartAudiometry);
+
+            function startAudiometry() {
+                if (!isResuming) {
+                    currentFrequency = 20;
+                }
+                frequencyBox.innerText = currentFrequency + " Hz";
+                startButton.disabled = true;
+                stopButton.disabled = false;
+                recordButton.disabled = false;
+                resumeButton.disabled = true;
+                restartButton.disabled = true;
+
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                playSound(currentFrequency);
+
+                audiometryInterval = setInterval(() => {
+                    currentFrequency += 100;
+                    if (currentFrequency <= 20000) {
+                        frequencyBox.innerText = currentFrequency + " Hz";
+                        playSound(currentFrequency);
+                    } else {
+                        stopAudiometry();
+                    }
+                }, 1000);
+            }
+
+            function stopAudiometry() {
+                clearInterval(audiometryInterval);
+                startButton.disabled = false;
+                stopButton.disabled = true;
+                recordButton.disabled = true;
+                resumeButton.disabled = false;
+                restartButton.disabled = false;
+                if (audioContext) {
+                    audioContext.close();
+                }
+            }
+
+            function resumeAudiometry() {
+                isResuming = true;
+                startAudiometry();
+            }
+
+            function restartAudiometry() {
+                isResuming = false;
+                startAudiometry();
+            }
+
+            function recordData() {
+                const frequency = currentFrequency;
+                const user = userRecords[currentUser];
+
+                if (user.recordedFrequencies.length < maxTests) {
+                    user.recordedFrequencies.push(frequency);
+                }
+
+                localStorage.setItem('userRecords', JSON.stringify(userRecords));
+                updateUserRecordTable();
+
+                if (user.recordedFrequencies.length === maxTests) {
+                    processRecordedData(user);
+                }
+            }
+
+            function playSound(frequency) {
+                if (audioContext) {
+                    oscillator = audioContext.createOscillator();
+                    oscillator.type = "sine";
+                    oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+                    oscillator.connect(audioContext.destination);
+                    oscillator.start();
+                    oscillator.stop(audioContext.currentTime + 0.5);
+                }
+            }
+
+            function updateUserRecordTable() {
+                recordedFrequenciesBody.innerHTML = '';
+
+                for (const user in userRecords) {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${user}</td>
+                        <td class="frequencies">${userRecords[user].recordedFrequencies.join(', ')}</td>
+                        <td>
+                            <button class="refreshButton" data-user-id="${user}"><i class="fas fa-sync-alt"></i> Refresh</button>
+                            <button class="downloadButton" data-user-id="${user}"><i class="fas fa-file-download"></i> Download Report</button>
+                            <button class="deleteButton" data-user-id="${user}"><i class="fas fa-trash"></i> Delete</button>
+                        </td>
+                    `;
+                    recordedFrequenciesBody.appendChild(row);
+                    row.querySelector('.refreshButton').addEventListener('click', refreshUserTest);
+                    row.querySelector('.downloadButton').addEventListener('click', downloadUserReport);
+                    row.querySelector('.deleteButton').addEventListener('click', deleteUserRecord);
+                }
+            }
+
+            function processRecordedData(user) {
+                const sum = user.recordedFrequencies.reduce((total, freq) => total + freq, 0);
+                const averageFrequency = sum / user.recordedFrequencies.length;
+
+                const averageDisplayForUser = document.createElement("div");
+                averageDisplayForUser.textContent = `Results = ${averageFrequency.toFixed(2)} Hz`;
+                resultsDisplay.appendChild(averageDisplayForUser);
+
+                const ageRange = mapFrequencyToAge(averageFrequency);
+                ageBox.innerHTML = `Age Range: ${ageRange}`;
+            }
+
+            function refreshUserTest(event) {
+                const userId = event.target.getAttribute('data-user-id');
+                userRecords[userId].recordedFrequencies = [];
+                localStorage.setItem('userRecords', JSON.stringify(userRecords));
+                updateUserRecordTable();
+                const resultDivs = Array.from(resultsDisplay.children);
+                resultDivs.forEach(div => {
+                    if (div.textContent.includes(`Results =`)) {
+                        div.remove();
+                    }
+                });
+                ageBox.innerHTML = '';
+            }
+
+            function downloadUserReport(event) {
+                const userId = event.target.getAttribute('data-user-id');
+                const user = userRecords[userId];
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+
+                doc.setFontSize(20);
+                doc.text("Hearing Test Report", 20, 20);
+
+                doc.setFontSize(12);
+                doc.text(`Username: ${userId}`, 20, 30);
+                doc.text(`Recorded Frequencies: ${user.recordedFrequencies.join(', ')}`, 20, 40);
+
+                const sum = user.recordedFrequencies.reduce((total, freq) => total + freq, 0);
+                const averageFrequency = sum / user.recordedFrequencies.length;
+                doc.text(`Average Frequency: ${averageFrequency.toFixed(2)} Hz`, 20, 50);
+
+                const ageRange = mapFrequencyToAge(averageFrequency);
+                doc.text(`Age Range: ${ageRange}`, 20, 60);
+
+                // Add design element
+                doc.setFillColor(0, 123, 255);
+                doc.rect(10, 70, 190, 3, 'F');
+
+                doc.save(`Hearing_Test_Report_${userId}.pdf`);
+            }
+
+            function deleteUserRecord(event) {
+                const userId = event.target.getAttribute('data-user-id');
+                delete userRecords[userId];
+                localStorage.setItem('userRecords', JSON.stringify(userRecords));
+                updateUserRecordTable();
+            }
+
+            function mapFrequencyToAge(frequency) {
+                if (frequency >= 16000 && frequency >= 19000) {
+                    return "0-10 years";
+                } else if (frequency > 14000 && frequency <= 16000) {
+                    return "10-30 years";
+                } else if (frequency > 11000 && frequency <= 14000) {
+                    return "30-50 years";
+                } else if (frequency > 20 && frequency <= 11000) {
+                    return "50-70 years";
+                } else {
+                    return "70+ years";
+                }
+            }
+
+            updateUserRecordTable();
+        });
+    </script>
+</body>
+</html>
+
